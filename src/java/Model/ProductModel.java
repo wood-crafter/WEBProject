@@ -90,4 +90,39 @@ public class ProductModel {
 
         return products;
     }
+    
+    public Product findById(String Id) throws SQLException, Exception {
+        Product product = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM [Product] WHERE product_id = ?");
+            ps.setString(1, Id);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String id = rs.getString("product_id");
+                String productName = rs.getString("product_name");
+                int quantity = rs.getInt("quantity");
+                double price = rs.getDouble("price");
+                String image = rs.getString("image");
+                String description = rs.getString("description");
+                boolean status = rs.getBoolean("status");
+                String cateID = rs.getString("cate_id");
+                
+                product = new Product(id, productName, quantity, price, image, description, status, cateID);
+            }
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+
+        return product;
+    }
 }

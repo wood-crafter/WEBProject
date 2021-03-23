@@ -49,12 +49,14 @@
                     <tr>
                         <th rowspan=${productsOfCategory.getNumberOfProduct(category)}>${category.categoryName}</th>
                         <td>${productsOfCategory.getProductList(category).get(0).productName}</td>
+                        <td><a href="addToCart?id=${productsOfCategory.getProductList(category).get(0).id}">Add to cart</a></td>
                     </tr>
                     <c:forEach var="product" items="${productsOfCategory.getProductList(category)}">
 
                         <c:if test="${!product.id.equals(productsOfCategory.getProductList(category).get(0).id)}">
                             <tr>
                                 <td>${product.getProductName()}</td>
+                                <td><a href="addToCart?id=${product.id}">Add to cart</a></td>
                             </tr>
                         </c:if>
                     </c:forEach>
