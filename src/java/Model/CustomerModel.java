@@ -120,7 +120,7 @@ public class CustomerModel {
 
         try {
             conn = new DBContext().getConnection();
-            ps = conn.prepareStatement("UPDATE [Customer] SET customer_id = ?, full_name = ?, address = ?, phone = ?, username = ?, password = ?, status");
+            ps = conn.prepareStatement("UPDATE [Customer] SET customer_id = ?, full_name = ?, address = ?, phone = ?, username = ?, password = ?, status = ?");
             ps.setInt(1, id);
             ps.setString(2, fullName);
             ps.setString(3, address);

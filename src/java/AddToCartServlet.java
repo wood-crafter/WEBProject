@@ -34,35 +34,39 @@ public class AddToCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
         String id = request.getParameter("id");
 //No product in cart yet
-        if(session.getAttribute("productsInCart") == null){
+        if (session.getAttribute("productsInCart") == null) {
             ProductInCart nextProduct = new ProductInCart(id);
             nextProduct.addOne();
-            
+
             ArrayList<ProductInCart> productsInCart = new ArrayList<>();
             productsInCart.add(nextProduct);
             session.setAttribute("productsInCart", productsInCart);
             request.getRequestDispatcher("home.jsp").forward(request, response);
 //Cart contain products
-        } else{
+        } else {
 //Already have product with this request id in cart -> Add one
+            boolean isContained = false;
             ArrayList<ProductInCart> productsInCart = (ArrayList<ProductInCart>) session.getAttribute("productsInCart");
-            for(int i = 0; i < productsInCart.size(); i++){
-                if(productsInCart.get(i).getId().equals(id)){
+            for (int i = 0; i < productsInCart.size(); i++) {
+                if (productsInCart.get(i).getId().equals(id)) {
                     productsInCart.get(i).addOne();
                     session.setAttribute("productsInCart", productsInCart);
                     request.getRequestDispatcher("home.jsp").forward(request, response);
+                    isContained = true;
                 }
             }
 //No product with request id in cart yet
-            ProductInCart nextProduct = new ProductInCart(id);
-            nextProduct.addOne();
-            productsInCart.add(nextProduct);
-            session.setAttribute("productsInCart", productsInCart);
-            request.getRequestDispatcher("home.jsp").forward(request, response);
+            if (!isContained) {
+                ProductInCart nextProduct = new ProductInCart(id);
+                nextProduct.addOne();
+                productsInCart.add(nextProduct);
+                session.setAttribute("productsInCart", productsInCart);
+                request.getRequestDispatcher("home.jsp").forward(request, response);
+            }
         }
     }
 

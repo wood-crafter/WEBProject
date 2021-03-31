@@ -116,4 +116,53 @@ public class BillModel {
         }
 
     }
+    
+    
+    public int getNewestID() throws SQLException, Exception {
+        Bill bill = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int id = 0;
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement("SELECT * FROM [Bill] WHERE bill_id = (SELECT MAX(bill_id) FROM [Bill])");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("bill_id");
+            }
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+
+        return id;
+    }
+    
+    public void updateStatus(int id, boolean status) throws SQLException, Exception {
+        Connection conn = null;
+        PreparedStatement ps = null;
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement("UPDATE [Bill] SET status = ? WHERE bill_id = ?");
+            ps.setInt(2, id);
+            ps.setBoolean(1, status);
+
+            ps.execute();
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+        }
+
+    }
 }

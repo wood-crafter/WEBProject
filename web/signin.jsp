@@ -15,6 +15,7 @@
     <body>
         <c:set var="firstRequest" value="${requestScope.firstRequest}" />
         <c:set var="user" value="${requestScope.user}" />
+        <c:set var="admin" value="${requestScope.admin}" />
 
 
         <form method="POST" action="signin">
@@ -25,10 +26,13 @@
 
         <c:if test="${firstRequest != null}">
 
-            <c:if test="${user == null}">
+            <c:if test="${user == admin}">
                 <h1>Wrong name or password!</h1>
             </c:if>
             <c:if test="${user != null}">
+                <c:redirect url="home.jsp" />
+            </c:if>
+            <c:if test="${admin != null}">
                 <c:redirect url="home.jsp" />
             </c:if>
         </c:if>

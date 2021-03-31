@@ -5,14 +5,18 @@
  */
 package Entity;
 
+import Model.BillDetailModel;
+import Model.BillModel;
 import Model.ProductModel;
-
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 /**
  *
  * @author phanh
  */
 public class ProductInCart {
+
     String id;
     String productName;
     int quantity = 0;
@@ -21,7 +25,7 @@ public class ProductInCart {
     String description;
     boolean status;
     String cateID;
-    
+
     ProductModel productModel = new ProductModel();
 
     public ProductInCart(String id) throws Exception {
@@ -34,8 +38,8 @@ public class ProductInCart {
         this.status = product.status;
         this.cateID = product.cateID;
     }
-    
-    public void addOne(){
+
+    public void addOne() {
         this.quantity += 1;
     }
 
@@ -78,6 +82,24 @@ public class ProductInCart {
     public ProductModel getProductModel() {
         return productModel;
     }
+
+    public double getTotal() {
+        return price * quantity;
+    }
+
+    public void createBill(double total,String name, String address, String phone, int id) throws Exception {
+        BillModel billModel = new BillModel();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+        
+        billModel.insert(date, total, name, address, phone, false, id);
+
+    }
     
-    
+    public void createBillDetail() throws Exception {
+        BillModel billModel = new BillModel();
+        int billID = billModel.getNewestID();
+        BillDetailModel billDetailModel = new BillDetailModel();
+        billDetailModel.insert(billID, this.id, quantity, price);
+    }
 }

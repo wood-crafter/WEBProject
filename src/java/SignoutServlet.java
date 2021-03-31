@@ -33,7 +33,7 @@ public class SignoutServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         
-        session.setAttribute("user", null);
+        session.invalidate();
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 

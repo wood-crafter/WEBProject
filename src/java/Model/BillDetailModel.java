@@ -49,8 +49,9 @@ public class BillDetailModel {
         return billDetails;
     }
     
-    public BillDetail findById(int Id) throws SQLException, Exception {
+    public ArrayList<BillDetail> findById(int Id) throws SQLException, Exception {
         BillDetail billDetail = null;
+        ArrayList<BillDetail> billDetails = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
 
@@ -67,6 +68,7 @@ public class BillDetailModel {
                 double price = rs.getDouble("price");
                 
                 billDetail = new BillDetail(id, productID, quantity, price);
+                billDetails.add(billDetail);
             }
         } finally {
             if (conn != null) {
@@ -77,7 +79,7 @@ public class BillDetailModel {
             }
         }
 
-        return billDetail;
+        return billDetails;
     }
       
     public void insert(int id, String productID, int quantity, double price) throws SQLException, Exception {

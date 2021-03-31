@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/Entity/Customer.java</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/SigninServlet.java</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/nbproject/build-impl.xml</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/HomeServlet.java</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/SignoutServlet.java</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/home.jsp</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/signin.jsp</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/product-update.jsp</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/UpdateProductServlet.java</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/admin.jsp</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/Model/ProductModel.java</file>
         </group>
     </open-files>
 </project-private>

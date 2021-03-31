@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 
+import Entity.Admin;
 import Entity.Customer;
+import Model.AdminModel;
 import Model.CustomerModel;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,21 +43,41 @@ public class SigninServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         Customer user = new CustomerModel().findByUsername(username);
+        Admin admin = new AdminModel().findByAdminName(username);
 
-        if (user == null) {
-            request.getRequestDispatcher("signin.jsp").forward(request, response);
-        } else {
-            if (user.getPassword().equals(password)) {
-                session.setAttribute("user", user);
-
-                request.setAttribute("user", user);
-                request.setAttribute("firstRequest", false);
-
-                request.getRequestDispatcher("/home").forward(request, response);
+        if (user == null && admin == null) {
+            if (username == null) {
+                request.getRequestDispatcher("signin.jsp").forward(request, response);
             } else {
-                request.setAttribute("user", null);
                 request.setAttribute("firstRequest", false);
                 request.getRequestDispatcher("signin.jsp").forward(request, response);
+            }
+        } else {
+            if (user != null) {
+                if (user.getPassword().equals(password)) {
+                    session.setAttribute("user", user);
+
+                    request.setAttribute("user", user);
+                    request.setAttribute("firstRequest", false);
+
+                    request.getRequestDispatcher("/home").forward(request, response);
+                } else {
+                    request.setAttribute("user", null);
+                    request.setAttribute("firstRequest", false);
+                    request.getRequestDispatcher("signin.jsp").forward(request, response);
+                }
+            } else {
+                if (admin.getPassword().equals(password)) {
+                    session.invalidate();
+                    HttpSession newSession = request.getSession();
+                    newSession.setAttribute("admin", admin);
+
+                    request.getRequestDispatcher("/admin").forward(request, response);
+                } else {
+                    request.setAttribute("user", null);
+                    request.setAttribute("firstRequest", false);
+                    request.getRequestDispatcher("signin.jsp").forward(request, response);
+                }
             }
         }
     }
