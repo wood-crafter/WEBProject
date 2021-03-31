@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author phanh
  */
+@MultipartConfig
 public class AddProductServlet extends HttpServlet {
 
     /**
@@ -39,27 +42,40 @@ public class AddProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
 
-        String id = request.getParameter("id");
-
         if (session.getAttribute("admin") == null) {
             request.getRequestDispatcher("/admin").forward(request, response);
-        } else {
-            if (request.getParameter("id") != null) {
-                String name = request.getParameter("name");
-                int quantity = Integer.valueOf(request.getParameter("quantity"));
-                double price = Double.valueOf(request.getParameter("price"));
-                String image = request.getParameter("image");
-                String descriptions = request.getParameter("descriptions");
-                String cateId = request.getParameter("cateId");
-                ProductModel productModel = new ProductModel();
-                productModel.insert(id, name, quantity, price, image, descriptions, cateId);
-                request.getRequestDispatcher("product-add.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("product-add.jsp").forward(request, response);
-            }
+            return;
         }
+
+        if (request.getMethod().equals("GET")) {
+            request.getRequestDispatcher("product-add.jsp").forward(request, response);
+            return;
+        }
+
+        String id = is2String(request.getPart("id").getInputStream());
+//        String name = request.getParameter("name");
+//        int quantity = Integer.valueOf(request.getParameter("quantity"));
+//        double price = Double.valueOf(request.getParameter("price"));
+//        String image = request.getParameter("image");
+//        String descriptions = request.getParameter("descriptions");
+//        String cateId = request.getParameter("cateId");
+//        ProductModel productModel = new ProductModel();
+//        productModel.insert(id, name, quantity, price, image, descriptions, cateId);
+        InputStream fileStream = request.getPart("file").getInputStream();
+        request.getRequestDispatcher("product-add.jsp").forward(request, response);
     }
-    
+
+    public String is2String(InputStream is) {
+        StringBuilder buffer = new StringBuilder();
+        Scanner scanner = new Scanner(is);
+
+        while (scanner.hasNext()) {
+            buffer.append(scanner.nextLine());
+        }
+
+        return buffer.toString();
+    }
+
     public static void copyFile(String from, String to) throws IOException {
 
         InputStream is = null;
