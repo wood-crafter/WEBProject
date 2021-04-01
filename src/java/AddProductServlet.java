@@ -53,15 +53,34 @@ public class AddProductServlet extends HttpServlet {
         }
 
         String id = is2String(request.getPart("id").getInputStream());
-//        String name = request.getParameter("name");
-//        int quantity = Integer.valueOf(request.getParameter("quantity"));
-//        double price = Double.valueOf(request.getParameter("price"));
-//        String image = request.getParameter("image");
-//        String descriptions = request.getParameter("descriptions");
-//        String cateId = request.getParameter("cateId");
-//        ProductModel productModel = new ProductModel();
-//        productModel.insert(id, name, quantity, price, image, descriptions, cateId);
+        String name = is2String(request.getPart("name").getInputStream());
+        int quantity = Integer.parseInt(is2String(request.getPart("quantity").getInputStream()));
+        double price = Double.parseDouble(is2String(request.getPart("price").getInputStream()));
+        String descriptions = is2String(request.getPart("descriptions").getInputStream());
+        String cateId = is2String(request.getPart("cateId").getInputStream());
+        
+        
         InputStream fileStream = request.getPart("file").getInputStream();
+        OutputStream os = null;
+        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\image\\" + id + ".png";
+        
+        try {
+            os = new FileOutputStream(destPath);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fileStream.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            fileStream.close();
+            os.close();
+        }
+        
+        ProductModel productModel = new ProductModel();
+        productModel.insert(id, name, quantity, price, destPath, descriptions, cateId);
+        
         request.getRequestDispatcher("product-add.jsp").forward(request, response);
     }
 

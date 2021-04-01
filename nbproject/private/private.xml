@@ -6,7 +6,8 @@
             <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/product-update.jsp</file>
             <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/UpdateProductServlet.java</file>
             <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/admin.jsp</file>
-            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/Model/ProductModel.java</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/web/product-add.jsp</file>
+            <file>file:/C:/Users/phanh/Documents/NetBeansProjects/JavaWeb101/WEBProject/src/java/AddProductServlet.java</file>
         </group>
     </open-files>
 </project-private>

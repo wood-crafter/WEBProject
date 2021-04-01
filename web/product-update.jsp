@@ -16,9 +16,6 @@
         <c:set var="passedServlet" value="${requestScope.passedServlet}" />
         <c:set var="productList" value="${requestScope.productList}" />
 
-        <c:if test="${passedServlet == null}">
-            <c:redirect url="home" />
-        </c:if>
 
         <c:if test="${productList != null}">
             <table style="width:100%"> 
@@ -36,14 +33,14 @@
                 </tr>
                 <c:forEach var="product" items="${productList}">
                     <tr>
-                    <form method="POST" action="updateProduct">
+                    <form method="POST" action="updateProduct" enctype="multipart/form-data">
                         <td><input type="text" name="id" value="${product.getId()}" required></td>
                         <td><input type="text" name="name" value="${product.getProductName()}" required></td>
                         <td><input type="number" name="quantity" value="${product.getQuantity()}" min="0"  required></td>
                         <td><input type="number" name="price" value="${product.getPrice()}" min="0" required></td>
-                        <td><input type="text" name="image" value="${product.getImage()}" required></td>
+                        <td><input type="file" name="image" value="${product.getImage()}" required></td>
                         <td><input type="text" name="description" value="${product.getDescription()}" required></td>
-                        <td><input type="radio" name="status" value="${product.isStatus()}" required></td>
+                        <td><input type="radio" name="status" value="${product.isStatus()}"></td>
                         <td><input type="text" name="cateId" value="${product.getCateID()}" required></td>
                         <td><button type="submit">Update</button></td>
                     </form>

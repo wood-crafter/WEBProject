@@ -13,9 +13,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,7 @@ import javax.servlet.http.HttpSession;
 /**
  *
  * @author phanh
- */
+ */@MultipartConfig
 public class UpdateProductServlet extends HttpServlet {
 
     /**
@@ -41,34 +43,64 @@ public class UpdateProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         ArrayList<Product> products = new ProductModel().getAll();
-        
-        String id = request.getParameter("id");
 
         if (session.getAttribute("admin") == null) {
             request.getRequestDispatcher("/admin").forward(request, response);
-        } else {
-            if (request.getParameter("id") != null) {
-                String name = request.getParameter("name");
-                int quantity = Integer.valueOf(request.getParameter("quantity"));
-                double price = Double.valueOf(request.getParameter("price"));
-                String image = request.getParameter("image");
-                String descriptions = request.getParameter("description");
-                String cateId = request.getParameter("cateId");
-                boolean status = Boolean.valueOf(request.getParameter("status"));
-                ProductModel productModel = new ProductModel();
-                productModel.update(id, name, quantity, price, image, descriptions, cateId, status);
-                products = new ProductModel().getAll();
-                request.setAttribute("passedServlet", true);
-                request.setAttribute("productList", products);
-                request.getRequestDispatcher("product-update.jsp").forward(request, response);
-            } else {
-                request.setAttribute("passedServlet", true);
-                request.setAttribute("productList", products);
-                request.getRequestDispatcher("product-update.jsp").forward(request, response);
-            }
+            return;
         }
+
+        if (request.getMethod().equals("GET")) {
+            request.setAttribute("productList", products);
+            request.getRequestDispatcher("product-update.jsp").forward(request, response);
+            return;
+        }
+
+        String id = is2String(request.getPart("id").getInputStream());
+        String name = is2String(request.getPart("name").getInputStream());
+        int quantity = Integer.parseInt(is2String(request.getPart("quantity").getInputStream()));
+        double price = Double.parseDouble(is2String(request.getPart("price").getInputStream()));
+        String descriptions = is2String(request.getPart("description").getInputStream());
+        String cateId = is2String(request.getPart("cateId").getInputStream());
+        boolean status = Boolean.getBoolean(is2String(request.getPart("status").getInputStream()));
+        
+        InputStream fileStream = request.getPart("image").getInputStream();
+        OutputStream os = null;
+        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\image\\" + id + ".png";
+        
+        try {
+            os = new FileOutputStream(destPath);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fileStream.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            fileStream.close();
+            os.close();
+        }
+        
+        ProductModel productModel = new ProductModel();
+        productModel.update(id, name, quantity, price, destPath, descriptions, cateId, status);
+        products = new ProductModel().getAll();
+        request.setAttribute("passedServlet", true);
+        request.setAttribute("productList", products);
+        request.getRequestDispatcher("product-update.jsp").forward(request, response);
+
     }
-    
+
+    public String is2String(InputStream is) {
+        StringBuilder buffer = new StringBuilder();
+        Scanner scanner = new Scanner(is);
+
+        while (scanner.hasNext()) {
+            buffer.append(scanner.nextLine());
+        }
+
+        return buffer.toString();
+    }
+
     public static void copyFile(String from, String to) throws IOException {
 
         InputStream is = null;
@@ -136,5 +168,3 @@ public class UpdateProductServlet extends HttpServlet {
     }// </editor-fold>
 
 }
-
-
