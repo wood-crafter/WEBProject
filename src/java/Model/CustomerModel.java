@@ -87,20 +87,19 @@ public class CustomerModel {
         return customer;
     }
       
-    public void insert(int id, String fullName, String address, String phone, String username, String password, boolean status) throws SQLException, Exception {
+    public void insert(String fullName, String address, String phone, String username, String password, boolean status) throws SQLException, Exception {
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = new DBContext().getConnection();
-            ps = conn.prepareStatement("INSERT INTO [Customer] (customer_id, full_name, address, phone, username, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, id);
-            ps.setString(2, fullName);
-            ps.setString(3, address);
-            ps.setString(4, address);
-            ps.setString(5, address);
-            ps.setString(6, address);
-            ps.setBoolean(7, status);
+            ps = conn.prepareStatement("INSERT INTO [Customer] (full_name, address, phone, username, password, status) VALUES (?, ?, ?, ?, ?, ?)");
+            ps.setString(1, fullName);
+            ps.setString(2, address);
+            ps.setString(3, phone);
+            ps.setString(4, username);
+            ps.setString(5, password);
+            ps.setBoolean(6, status);
 
             ps.execute();
         } finally {

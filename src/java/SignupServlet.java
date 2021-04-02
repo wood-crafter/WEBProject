@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 
+import Model.CustomerModel;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,20 +30,36 @@ public class SignupServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SignupServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SignupServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        
+        if (request.getMethod().equals("GET")) {
+            request.getRequestDispatcher("signup.jsp").forward(request, response);
+            return;
         }
+        
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
+        
+        if(!password.equals(confirmPassword)){
+            request.setAttribute("isWrongPassword", true);
+            request.getRequestDispatcher("signup.jsp").forward(request, response);
+            return;
+        }
+        
+        String fullName = request.getParameter("fullname");
+        String address = request.getParameter("address");
+        String phone = request.getParameter("phone");
+        
+        CustomerModel customerModel = new CustomerModel();
+        if(customerModel.findByUsername(username) != null){
+            request.setAttribute("isUsernameExisted", true);
+            request.getRequestDispatcher("signup.jsp").forward(request, response);
+            return;
+        }
+        customerModel.insert(fullName, address, phone, username, password, true);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -55,7 +74,11 @@ public class SignupServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(SignupServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -69,7 +92,11 @@ public class SignupServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(SignupServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
