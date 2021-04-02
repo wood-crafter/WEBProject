@@ -6,12 +6,13 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -26,16 +27,17 @@
         </style>
     </head>
     <body>
-    <c:set var="billDetails" value="${requestScope.billDetails}" />
-    <c:set var="passedServlet" value="${requestScope.passedServlet}" />
-    <c:set var="status" value="${requestScope.status}" />
-    <c:set var="id" value="${requestScope.id}" />
+        <c:set var="billDetails" value="${requestScope.billDetails}" />
+        <c:set var="passedServlet" value="${requestScope.passedServlet}" />
+        <c:set var="status" value="${requestScope.status}" />
+        <c:set var="id" value="${requestScope.id}" />
+        <c:set var="totalPrice" value="${requestScope.totalPrice}" />
 
-    <c:if test="${passedServlet == null}">
-        <c:redirect url="billManager" />
-    </c:if>
-    
-    <nav class="nav nav-tabs">
+        <c:if test="${passedServlet == null}">
+            <c:redirect url="billManager" />
+        </c:if>
+
+        <nav class="nav nav-tabs">
             <!--<p>A web page design by HuckFitler!</p>-->
             <li class="nav-item">
                 <a class="nav-link" href="home">Home</a>
@@ -66,28 +68,36 @@
             </c:if>
         </nav>
 
-    <c:if test="${billDetails != null}">
-        <table style="width:100%" border="1"> 
-            <tr>
-                <th>Bill Id</th>
-                <th>Product Id</th>
-                <th>Quantity</th>
-                <th>Price</th>
-
-            </tr>
-            <c:forEach var="billDetail" items="${billDetails}">
+        <c:if test="${billDetails != null}">
+            <table style="width:100%" border="1"> 
                 <tr>
-                    <td>${billDetail.getBillId()}</td>
-                    <td>${billDetail.getProductID()}</td>
-                    <td>${billDetail.getQuantity()}</td>
-                    <td>${billDetail.getPrice()}</td>
-                </tr>
-            </c:forEach>
-        </table>
+                    <th>Bill Id</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
 
-        <c:if test="${status == false}">
+                </tr>
+                <c:forEach var="billDetail" items="${billDetails}">
+                    <tr>
+                        <td>${billDetail.getBillId()}</td>
+                        <td>${billDetail.getProductName()}</td>
+                        <td>${billDetail.getQuantity()}</td>
+
+                        <td><fmt:formatNumber type="currency" value="${billDetail.getPrice()}" /></td>
+                    </tr>
+                    
+                </c:forEach>
+                    
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total Price: ${totalPrice}</td>
+            </table>
+
+            <c:if test="${status == false}">
             <td><a href="billDetail?isDone=1&id=${id}" class="text-danger">Change status to Done!</a>
-        </td></c:if>
+            </td></c:if>
     </c:if>
 </body>
+</script>
 </html>

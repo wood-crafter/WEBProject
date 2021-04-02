@@ -5,7 +5,9 @@
  */
 
 import Entity.Bill;
+import Model.ProductModel;
 import Entity.BillDetail;
+import Entity.Product;
 import Model.BillDetailModel;
 import Model.BillModel;
 import java.io.IOException;
@@ -51,7 +53,17 @@ public class BillDetailServlet extends HttpServlet {
                 request.setAttribute("id", billId);
                 request.setAttribute("passedServlet", true);
                 ArrayList<BillDetail> billDetails = billDetailModel.findById(billId);
+                ProductModel productModel = new ProductModel();
+                for(int i = 0; i < billDetails.size(); i++){
+                    billDetails.get(i).setProductName(productModel.findById(billDetails.get(i).getProductID()).getProductName());
+                }
+                
+                double totalPrice = 0;
+                for(int i = 0; i < billDetails.size(); i++){
+                    totalPrice += billDetails.get(i).getPrice();
+                }
                 request.setAttribute("billDetails", billDetails);
+                request.setAttribute("totalPrice", totalPrice);
                 request.getRequestDispatcher("bill-detail.jsp").forward(request, response);
             } else {
                 int billId = Integer.parseInt(request.getParameter("id"));

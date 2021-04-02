@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -80,7 +81,8 @@
                         <td>${bill.getId()}</td>
                         <td>${bill.getRecName()}</td>
                         <td>${bill.getCreateDate()}</td>
-                        <td>${bill.getTotalAmount()}</td>
+                        
+                        <td><fmt:formatNumber type="currency" value="${bill.getTotalAmount()}" /></td>
                         <c:if test="${bill.isStatus() == false}"><td>Wait</td></c:if>
                         <c:if test="${bill.isStatus() == true}"><td>Done</td></c:if>
                         <td><a href="billDetail?id=${bill.getId()}&status=${bill.isStatus()}">Detail</a></td>

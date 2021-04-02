@@ -84,10 +84,9 @@
                     <form method="POST" action="updateProduct?previousId=${product.getId()}" enctype="multipart/form-data">
                         <td>${product.getId()}</td>
                         <td><input type="text" name="name" value="${product.getProductName()}" required></td>
-                        <td><input type="number" name="quantity" value="${product.getQuantity()}" min="0"  required></td>
-                            <%--<fmt:formatNumber type="number"--%> 
-                                              <!--value="${product.getPrice()}"-->
-                                              <!--var="price${product.getId()}"/>-->
+                        <td>
+                            <input type="number" name="quantity" value="${product.getQuantity()}" min="0"  required>
+                        </td>
                         <td><input type="number" name="price" value="${product.getPrice()}" min="0" required></td>
                         <td><input type="file" name="image" value="${product.getImage()}" required></td>
                         <td><input type="text" name="description" value="${product.getDescription()}" required></td>
@@ -99,5 +98,11 @@
             </c:forEach>
         </table> 
     </c:if>
+    <!--SCRIPTS-->
+    <script>
+        document.querySelectorAll('[name="price"]').forEach(input => {
+            input.value = +input.value;
+        });
+    </script>
 </body>
 </html>

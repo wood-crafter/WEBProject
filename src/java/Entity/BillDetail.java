@@ -14,6 +14,7 @@ public class BillDetail {
     String productID;
     int quantity;
     double price;
+    String productName;
 
     public BillDetail(int billId, String productID, int quantity, double price) {
         this.billId = billId;
@@ -37,4 +38,14 @@ public class BillDetail {
     public double getPrice() {
         return price;
     }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    
 }
