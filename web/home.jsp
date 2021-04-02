@@ -6,66 +6,110 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Home Page</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <style>
+            body {
+                background-image: url(wallpaper.jpg);
+                background-repeat: no-repeat;
+                background-size: cover;
+                min-height: 100vh;
+            }
+            .product-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                row-gap: 1rem;
+            }
+
+            .card-img-top {
+                height: 300px;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+            }
+        </style>
     </head>
     <body>
         <c:set var="passedServlet" value="${requestScope.passedServlet}" />
         <c:set var="user" value="${sessionScope.user}" />
         <c:set var="categories" value="${requestScope.categories}" />
-        <c:set var="productsOfCategory" value="${requestScope.productsOfCategory}" />
+        <c:set var="products" value="${requestScope.products}" />
 
         <c:if test="${passedServlet == null}">
             <c:redirect url="home" />
         </c:if>
-        <%--<c:set var="user" value="${sessionScope.user}" />--%>
-        <nav class="navbar navbar-default">
+        <c:set var="user" value="${sessionScope.user}" />
+        <nav class="nav nav-tabs">
             <!--<p>A web page design by HuckFitler!</p>-->
-            <h1>Welcome ${user.getUsername()}</h1>
+            <h3 style="color:Tomato;">Welcome ${user.getUsername()}</h3>
 
             <c:if test="${user == null}">
-                <a href="signin">Login</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="signin">Login</a>
+                </li>
             </c:if>
 
             <c:if test="${user != null}">
-                <a href="signout">Logout</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="signout">Logout</a>
+                </li>
             </c:if>
 
-            <a href="signup">Signup</a>
-            
+            <li class="nav-item">
+                <a class="nav-link" href="signup">Signup</a>
+            </li>
+
             <c:if test="${user != null}">
-                <a href="showCart">Show Cart</a>
+                <li class="nav-item">
+                    <a class="nav-link" href="showCart">Show Cart</a>
+                </li>
             </c:if>
         </nav>
 
+        <c:forEach items="${categories}" var="category">
+            <a
+                href="home?categoryId=${requestScope.categoryId == category.id ? "" : category.id}"
+                class="badge badge-pill badge-${requestScope.categoryId == category.id ? "success" : "secondary"}"
+                >
+                ${category.categoryName}
+            </a>
+        </c:forEach>
 
-
-        <c:if test="${categories != null}">
-            <table style="width:100%"> 
-                <c:forEach var="category" items="${categories}">
-                    <tr>
-                        <th rowspan=${productsOfCategory.getNumberOfProduct(category)}>${category.categoryName}</th>
-                        <td>${productsOfCategory.getProductList(category).get(0).productName}</td>
+        <div class="product-list">
+            <c:forEach items="${products}" var="product">
+                <div class="card" style="width: 360px">
+                    <div
+                        class="card-img-top"
+                        style="background-image: url(image/${product.id}.png)"
+                        ></div>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            ${product.productName}
+                        </h4>
+                        <p class="card-text">
+                            <fmt:formatNumber type="currency" value="${product.price}" />
+                        </p>
                         <c:if test="${user != null}">
-                            <td><a href="addToCart?id=${productsOfCategory.getProductList(category).get(0).id}">Add to cart</a></td>
+                            <a
+                                href="addToCart?id=${product.id}"
+                                class="btn btn-success"
+                                >
+                                Add to Cart
+                            </a>
                         </c:if>
-                    </tr>
-                    <c:forEach var="product" items="${productsOfCategory.getProductList(category)}">
+                    </div>
+                </div>
+            </c:forEach>
 
-                        <c:if test="${!product.id.equals(productsOfCategory.getProductList(category).get(0).id)}">
-                            <tr>
-                                <td>${product.getProductName()}</td>
-                                <c:if test="${user != null}">
-                                    <td><a href="addToCart?id=${product.id}">Add to cart</a></td>
-                                </c:if>
-                            </tr>
-                        </c:if>
-                    </c:forEach>
-                </c:forEach>
-            </table> 
-        </c:if>
+        </div>
     </body>
 </html>

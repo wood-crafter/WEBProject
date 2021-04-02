@@ -54,7 +54,7 @@ public class ProductModel {
         return products;
     }
     
-    public ArrayList<Product> findByCategoryId(String categoryId) throws SQLException, Exception {
+    public ArrayList<Product> getByCategoryId(String categoryId) throws SQLException, Exception {
         ArrayList<Product> products = new ArrayList<>();
         Product product = null;
         Connection conn = null;
@@ -155,13 +155,13 @@ public class ProductModel {
 
     }
     
-    public void update(String id, String name, int quantity, double price, String image, String description, String cateID, boolean status) throws SQLException, Exception {
+    public void update(String previousId, String id, String name, int quantity, double price, String image, String description, String cateID, boolean status) throws SQLException, Exception {
         Connection conn = null;
         PreparedStatement ps = null;
 
         try {
             conn = new DBContext().getConnection();
-            ps = conn.prepareStatement("UPDATE [Product] SET product_name = ?, quantity = ?,  price = ?, image = ?, description = ?, status = ?, cate_id = ? WHERE product_id = ?");
+            ps = conn.prepareStatement("UPDATE [Product] SET product_name = ?, quantity = ?,  price = ?, image = ?, description = ?, status = ?, cate_id = ? , product_id = ? WHERE product_id = ?");
             ps.setString(8, id);
             ps.setString(1, name);
             ps.setInt(2, quantity);
@@ -170,6 +170,7 @@ public class ProductModel {
             ps.setString(5, description);
             ps.setBoolean(6, status);
             ps.setString(7, cateID);
+            ps.setString(9, previousId);
 
             ps.execute();
             System.out.println("Updateed!");

@@ -36,6 +36,10 @@
         <servlet-name>BillDetailManager</servlet-name>
         <servlet-class>BillDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SignupServlet</servlet-name>
+        <servlet-class>SignupServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AddToCartServlet</servlet-name>
         <url-pattern>/addToCart</url-pattern>
@@ -75,6 +79,10 @@
     <servlet-mapping>
         <servlet-name>BillDetailManager</servlet-name>
         <url-pattern>/billDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SignupServlet</servlet-name>
+        <url-pattern>/signup</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

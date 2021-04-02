@@ -4,27 +4,18 @@
  * and open the template in the editor.
  */
 
-import Entity.Category;
-import Entity.Product;
-import Entity.ProductOfCategory;
-import Model.CategoryModel;
-import Model.ProductModel;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author phanh
  */
-public class HomeServlet extends HttpServlet {
+public class SignupServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,34 +27,20 @@ public class HomeServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, Exception {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
-        HttpSession session = request.getSession();
-        String categoryId = request.getParameter("categoryId");
-
-        CategoryModel categoryModel = new CategoryModel();
-        ProductModel productModel = new ProductModel();
-
-        ArrayList<Category> categories = categoryModel.getAll();
-        ArrayList<Product> products = categoryId == null || categoryId == ""
-                ? productModel.getAll()
-                : productModel.getByCategoryId(categoryId);
-        
-//        ArrayList<ArrayList<Product>> productsOfCate = new ArrayList<>();
-//        for(int i = 0; i < categories.size(); i++){
-//            ArrayList<Product> products = productModel.getByCategoryId(categories.get(i).getId());
-//            productsOfCate.add(products);
-//        }
-//        ProductOfCategory productsOfCategory = new ProductOfCategory(productsOfCate);
-        
-        request.setAttribute("passedServlet", true);
-        request.setAttribute("categoryId", categoryId);
-        request.setAttribute("products", products);
-        request.setAttribute("categories", categories);
-//        request.setAttribute("productsOfCategory", productsOfCategory);
-
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet SignupServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet SignupServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -78,11 +55,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -96,11 +69,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

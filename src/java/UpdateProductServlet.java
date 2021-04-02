@@ -26,7 +26,8 @@ import javax.servlet.http.HttpSession;
 /**
  *
  * @author phanh
- */@MultipartConfig
+ */
+@MultipartConfig
 public class UpdateProductServlet extends HttpServlet {
 
     /**
@@ -43,6 +44,7 @@ public class UpdateProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         ArrayList<Product> products = new ProductModel().getAll();
+        String previousId = request.getParameter("previousId");
 
         if (session.getAttribute("admin") == null) {
             request.getRequestDispatcher("/admin").forward(request, response);
@@ -55,18 +57,19 @@ public class UpdateProductServlet extends HttpServlet {
             return;
         }
 
-        String id = is2String(request.getPart("id").getInputStream());
+        ProductModel productModel = new ProductModel();
+
         String name = is2String(request.getPart("name").getInputStream());
         int quantity = Integer.parseInt(is2String(request.getPart("quantity").getInputStream()));
         double price = Double.parseDouble(is2String(request.getPart("price").getInputStream()));
         String descriptions = is2String(request.getPart("description").getInputStream());
         String cateId = is2String(request.getPart("cateId").getInputStream());
         boolean status = Boolean.getBoolean(is2String(request.getPart("status").getInputStream()));
-        
+
         InputStream fileStream = request.getPart("image").getInputStream();
         OutputStream os = null;
-        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\image\\" + id + ".png";
-        
+        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\web\\image\\" + previousId + ".png";
+
         try {
             os = new FileOutputStream(destPath);
             byte[] buffer = new byte[1024];
@@ -80,9 +83,8 @@ public class UpdateProductServlet extends HttpServlet {
             fileStream.close();
             os.close();
         }
-        
-        ProductModel productModel = new ProductModel();
-        productModel.update(id, name, quantity, price, destPath, descriptions, cateId, status);
+
+        productModel.update(previousId, previousId, name, quantity, price, destPath, descriptions, cateId, status);
         products = new ProductModel().getAll();
         request.setAttribute("passedServlet", true);
         request.setAttribute("productList", products);

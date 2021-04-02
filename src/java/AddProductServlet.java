@@ -41,6 +41,7 @@ public class AddProductServlet extends HttpServlet {
             throws ServletException, IOException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
+        ProductModel productModel = new ProductModel();
 
         if (session.getAttribute("admin") == null) {
             request.getRequestDispatcher("/admin").forward(request, response);
@@ -53,6 +54,12 @@ public class AddProductServlet extends HttpServlet {
         }
 
         String id = is2String(request.getPart("id").getInputStream());
+        
+        if (productModel.findById(id) != null) {
+            request.setAttribute("isIdExisted", true);
+                request.getRequestDispatcher("product-add.jsp").forward(request, response);
+                return;
+        }
         String name = is2String(request.getPart("name").getInputStream());
         int quantity = Integer.parseInt(is2String(request.getPart("quantity").getInputStream()));
         double price = Double.parseDouble(is2String(request.getPart("price").getInputStream()));
@@ -62,7 +69,7 @@ public class AddProductServlet extends HttpServlet {
         
         InputStream fileStream = request.getPart("file").getInputStream();
         OutputStream os = null;
-        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\image\\" + id + ".png";
+        String destPath = "C:\\Users\\phanh\\Documents\\NetBeansProjects\\JavaWeb101\\WEBProject\\web\\image\\" + id + ".png";
         
         try {
             os = new FileOutputStream(destPath);
@@ -78,7 +85,7 @@ public class AddProductServlet extends HttpServlet {
             os.close();
         }
         
-        ProductModel productModel = new ProductModel();
+        
         productModel.insert(id, name, quantity, price, destPath, descriptions, cateId);
         
         request.getRequestDispatcher("product-add.jsp").forward(request, response);
